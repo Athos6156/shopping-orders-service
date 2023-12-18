@@ -7,10 +7,10 @@ class DBUser:
 	def connect_to_db(self):
 		try:
 			connection = mysql.connector.connect(
-				host="database-1.ccpnj0h1rgzu.us-east-1.rds.amazonaws.com",  # Replace with your RDS endpoint
-				user="admin",
-				password="dbuserdbuser",
-				database="dbuser",
+				host="database-order.clgnsg6pdjzy.us-east-1.rds.amazonaws.com",  # Replace with your RDS endpoint
+				user="admin2",
+				password="dborderdborder",
+				database="dborder",
 			)
 			return connection
 		except Exception as e:
