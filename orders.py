@@ -1,3 +1,6 @@
+import random
+from time import sleep
+
 from flask import Flask, request, jsonify
 from db import DBUser
 import mysql.connector
@@ -6,6 +9,8 @@ from Logging import LoggingMiddleware
 order_app = Flask(__name__)
 order_app.wsgi_app = LoggingMiddleware(order_app.wsgi_app)
 dborder = DBUser()
+from flask_cors import CORS
+cors = CORS(order_app, resources={r"/api/*": {"origins": "*"}})
 
 
 # help functions
@@ -46,6 +51,7 @@ def get():
 
 @order_app.route('/api/order/create/', methods=['POST'])
 def create():
+	sleep(random.randint(0,5))
 	data = request.get_json()
 	order_info = get_order_info(data)
 	connection = dborder.connect_to_db()
@@ -141,6 +147,7 @@ def update():
 
 @order_app.route('/api/order/delete/', methods=['DELETE'])
 def delete():
+	sleep(random.randint(0,5))
 	data = request.get_json()
 	ordernum = data.get('order_num')
 	order_info = get_order_info(data)
