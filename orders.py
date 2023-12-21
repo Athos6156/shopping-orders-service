@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from db import DBUser
 import mysql.connector
+from Logging import LoggingMiddleware
 
 order_app = Flask(__name__)
+order_app.wsgi_app = LoggingMiddleware(order_app.wsgi_app)
 dborder = DBUser()
 
 
@@ -24,6 +26,23 @@ def get_order_info(data):
 def hello_world():
 	return 'Hello World, I am the Orders Service, I will handle orders info!'
 
+@order_app.route('/api/order/get_orders_for_date', methods=['GET'])
+def get():
+	data = request.get_json()
+	date = data['date']
+	page_num = data['page']
+	page_size=data['page_size']
+
+	connection = dborder.connect_to_db()
+	cursor = connection.cursor()
+	query = f"""select * from Orders where Order_Date='{date}'"""
+	cursor.execute(query)
+	orders = cursor.fetchall()
+	orders_to_return = orders[page_num*page_size : (((page_num+1) * page_size))]
+	cursor.close()
+	connection.close()
+
+	return orders_to_return
 
 @order_app.route('/api/order/create/', methods=['POST'])
 def create():

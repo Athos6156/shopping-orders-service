@@ -2,6 +2,7 @@ import unittest
 import json
 from orders import order_app
 
+
 class TestUserAPI(unittest.TestCase):
 
 	def setUp(self):
@@ -10,12 +11,25 @@ class TestUserAPI(unittest.TestCase):
 	def test_hello_world(self):
 		response = self.app.get('/')
 		self.assertEqual(response.status_code, 200)
-		self.assertEqual(response.data.decode('utf-8'), 'Hello World, I am the Orders Service, I will handle orders info!')
+		self.assertEqual(response.data.decode('utf-8'),
+						 'Hello World, I am the Orders Service, I will handle orders info!')
+
+	def test_get_order(self):
+		data = {
+			"date": "2023-12-01",  # PK
+			"page": 0,  # PK
+			"page_size": 10
+		}
+		response = self.app.get('/api/order/get_orders_for_date', data=json.dumps(data),
+								content_type='application/json')
+		for i in range(0,3):
+			self.assertEqual(response.status_code, 200)
+			self.assertTrue(len(json.loads(response.data)) == 10)
 
 	def test_create_order(self):
 		data = {
-			"Customer_ID": "testuser1", # PK
-			"Order_Date": "2023-12-01", # PK
+			"Customer_ID": "testuser1",  # PK
+			"Order_Date": "2023-12-01",  # PK
 			"required_Date": "2023-12-01",
 			"Shipping_Date": "2023-12-01",
 			"Status_": "Order Created",
@@ -30,8 +44,8 @@ class TestUserAPI(unittest.TestCase):
 
 	def test_update_order(self):
 		data = {
-			"Customer_ID": "testuser1", # PK
-			"Order_Date": "2023-12-01", # PK
+			"Customer_ID": "testuser1",  # PK
+			"Order_Date": "2023-12-01",  # PK
 			"required_Date": "2023-12-01",
 			"Shipping_Date": "2023-12-01",
 			"Status_": "Shipping",
@@ -46,8 +60,8 @@ class TestUserAPI(unittest.TestCase):
 
 	def test_delete_order(self):
 		data = {
-			"Customer_ID": "testuser1", # PK
-			"Order_Date": "2023-12-01", # PK
+			"Customer_ID": "testuser1",  # PK
+			"Order_Date": "2023-12-01",  # PK
 			"required_Date": "2023-12-01",
 			"Shipping_Date": "2023-12-01",
 			"Status_": "Shipping",
